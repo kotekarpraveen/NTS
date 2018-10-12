@@ -9,6 +9,23 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
     <title>NTS- Code Assignment</title>
+
+    <style type="text/css">
+      
+      .loading {
+    left: 0;
+    right: 0;
+    min-height: 100px;
+    top: 0px;
+    bottom: 0px;
+    z-index: 10000;
+    position: absolute;
+    background-color: rgba(255,255,255,0.7);
+    background-image: url(  loading.gif);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+    </style>
   </head>
   <body>
     <div class="container">
@@ -16,13 +33,13 @@
           <h3><strong>NTS Problem Statement</strong></h3>
 
         </div>
-        <div class="row col-md-6 col-md-offset-3" style="margin:20%">
+        <div class="row col-md-6 col-md-offset-3" id="ntsfileupload" style="margin:20%">
 
 
 
           <p class="text-success success"></p>
           <p class="text-danger error"></p>
-           <form class="form-inline" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
+           <form class="form-inline"  method="POST"  enctype="multipart/form-data">
             <label for="Media Upload" ><strong>Choose File:</strong></label>
             <div class="form-group">
               <input class="form-control" type="file" name="filename" id="file">
@@ -59,11 +76,19 @@
               console.log(_this.apipath);
 
         $("body").on("click","#fileuploadsubmit",function(){
-        
+        showLoadingDiv("#ntsfileupload");
         $("p.success").html("");
         $("p.error").html("");
         console.log($("#file").get(0).files[0]);
         var data = $("#file").get(0).files[0];
+
+        if(data == "" || data == null)
+        {
+            stopLoadingDiv("#ntsfileupload");
+            $("p.error").html("Please choose a media file");
+            setInterval(function(){ $("p.error").html("");$("#file").val("");}, 3000);
+            return false;
+        }
         console.log(data);
         var formdata=new FormData();
         formdata.append("filename",data);
@@ -78,16 +103,19 @@
           console.log(data);
           if(!data.error)
           {
+            stopLoadingDiv("#ntsfileupload");
             $("p.success").html("Successfully file uploaded to S3 bucket");
             setInterval(function(){ $("p.success").html(""); $("#file").val("");}, 3000);
           }
           else
           {
-             $("p.error").html(data.error);
+            stopLoadingDiv("#ntsfileupload");
+            $("p.error").html(data.error);
             setInterval(function(){ $("p.error").html("");$("#file").val("");}, 3000);
           }
         },
         error:function(data){
+          stopLoadingDiv("#ntsfileupload");
           console.log(data);
            $("p.error").html(data.error);
           setInterval(function(){ $("p.error").html(""); $("#file").val("");}, 3000);
@@ -95,6 +123,19 @@
       });
         
       });
+
+    function showLoadingDiv(id)
+    {
+      $(id).children().css({"opacity":"0"});
+      $(id).append("<div class='loading'></div>");
+    }
+
+    function stopLoadingDiv(id)
+    {
+      $(id).children().css({"opacity":"1"});
+      $(id+" .loading").remove();
+    }
+
 
      });
 
