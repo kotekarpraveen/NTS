@@ -29,9 +29,9 @@ define('NTS_SQS_URL','https://sqs.us-west-2.amazonaws.com/610988408801/nts_s3_sq
 
 
 //AWS credtionals
-define('NTS_ORIGIN_AWS_SDK_KEY','AKIAIFWQVDQVQBKYSVIA');
-define('NTS_ORIGIN_AWS_SDK_SECRET','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');
-define('NTS_ORIGIN_AWS_S3_REGION','us-west-2');
+define('NTS_ORIGIN_AWS_SDK_KEY','');
+define('NTS_ORIGIN_AWS_SDK_SECRET','');
+define('NTS_ORIGIN_AWS_S3_REGION','');
 
 
 ?>
